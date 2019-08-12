@@ -8,6 +8,21 @@
   </div>
 </template>
 
+<script>
+import { mapActions } from 'vuex'
+
+export default {
+  methods: {
+    ...mapActions([
+      'establishSocketConnection'
+    ])
+  },
+  created () {
+    this.$store.dispatch('establishSocketConnection')
+  }
+}
+</script>
+
 <style lang="scss">
 @import './sass/base/base';
 @import './sass/base/typography';
