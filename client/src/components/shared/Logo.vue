@@ -5,11 +5,14 @@
 </template>
 
 <style scoped lang="scss">
+@import '../../sass/abstracts/variables';
+
 .logo {
     h1 {
         text-align: center;
-        font-size: 8rem;
+        font-size: 12rem;
         margin-bottom: 4rem;
+        color: $color-grey-dark-4;
     }
 }
 </style>

@@ -8,7 +8,7 @@
 @import '../../sass/abstracts/variables';
 
 .footer {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     color: $color-grey-dark-3;
     text-align: center;
     margin-bottom: 1rem;

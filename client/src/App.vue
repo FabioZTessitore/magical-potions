@@ -9,7 +9,6 @@
 </template>
 
 <style lang="scss">
-@import './sass/abstracts/variables';
 @import './sass/base/base';
 @import './sass/base/typography';
 </style>
