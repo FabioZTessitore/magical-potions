@@ -13,6 +13,7 @@
         font-size: 12rem;
         margin-bottom: 4rem;
         color: $color-grey-dark-4;
+        font-weight: 300;
     }
 }
 </style>
