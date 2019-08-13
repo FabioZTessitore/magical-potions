@@ -1,16 +1,6 @@
 <template>
-    <div class="sigunp">
-        <div class="signup__heading">
-            Sign Up to Magical Potions
-        </div>
-
-        <div class="signup__form">
-            <div class="form-group">
-                <label for="useremail">Email Address:</label>
-                <input id="useremail" type="email" v-model="form.email" required placeholder="Enter Email">
-                <span class="description">"We'll never share your email with anyone else.</span>
-            </div>
-
+    <div class="login">
+        <div class="login__form">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input id="username" type="text" v-model="form.username" required placeholder="Enter Username">
@@ -21,7 +11,7 @@
                 <input id="userpassword" type="password" v-model="form.password" required placeholder="Enter Password">
             </div>
             
-            <button type="button" @click="onSignupSubmit">Sign Up</button>
+            <button type="button" @click="onLoginSubmit">Login</button>
         </div>
     </div>
 </template>
@@ -33,7 +23,6 @@ export default {
     data () {
         return {
             form: {
-                email: '',
                 username: '',
                 password: ''
             }
@@ -45,26 +34,34 @@ export default {
         ])
     },
     methods: {
-        onSignupSubmit () {
-            this.socket.emit('signup', this.form)
+        onLoginSubmit () {
+            this.socket.emit('authentication', this.form)
+
         }
     },
     created () {
-        this.socket.off('signupResponse')
-        this.socket.on('signupResponse', function (data) {
-            // in caso di errore mostralo
-            if (data.success === false) return console.log(data.message)
+        this.socket.off('loginResponse')
+        this.socket.on('loginResponse', function (data) {
+            // errors are handled by 'unauthorized'
 
             // se tutto ok vai alla home page utente (che carichera' i dati iniziali?)
             // forse se tutto ok in questo messaggio dovrebbero essere presenti tutti i dati
             // (inutile fare una nuova connessione!)
+            console.log(data)
         })
+        
+        this.socket.off('unauthorized')
+        this.socket.on('unauthorized', function(err){
+            console.log("There was an error with the authentication:", err.message);
+        });
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.signup {
+.login {
+    margin-bottom: 3rem;
+
     &__heading {
         font-size: 6rem;
         text-align: center;
@@ -81,10 +78,6 @@ export default {
 
         .form-group {
             margin-bottom: 2rem;
-        }
-
-        .description {
-            display: block;
         }
     }
 }

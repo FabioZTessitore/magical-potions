@@ -32,6 +32,38 @@ app.get('*', function (req, res) {
   res.sendFile(__dirname + '/client/dist/index.html');
 });
 
+require('socketio-auth')(io, {
+  authenticate: function (socket, data, callback) {
+    const username = data.username;
+    const password = data.password;
+
+    User.findOne({ 'username': username }, function (err, user) {
+      if (err || !user) return callback(new Error("User not found"));
+      return callback(null, user.validPassword(password));
+    });
+  },
+
+  postAuthenticate: function (socket, data) {
+    const username = data.username;
+
+    User.findOne({ 'username': username }, function (err, user) {
+      socket.client.user = user;
+    });
+
+    // invia i dati di gioco e dell'utente
+    socket.emit('loginResponse', {
+      message: 'sei dentro',
+      username: username
+    })
+  },
+
+  disconnect: function  (socket) {
+    console.log(socket.id + ' disconnected');
+  },
+
+  timeout: 30000  // 30 sec
+});
+
 
 io.on('connection', function(socket){
     console.log('a user connected');
@@ -68,6 +100,7 @@ io.on('connection', function(socket){
           if (err) throw err;
         });
   
+        // inviare anche i dati iniziali (utente e gioco)
         socket.emit('signupResponse', {
           success: true
         });

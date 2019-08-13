@@ -11,6 +11,7 @@
       </div>
 
       <div class="login">
+        <app-login></app-login>
         <p class="login__signup">New to <strong>Magical Potions</strong>? <router-link to="/signup">Create an account</router-link></p>
       </div>
 
@@ -23,11 +24,13 @@
 <script>
 import Header from '@/components/layout/Header.vue'
 import Footer from '@/components/layout/Footer.vue'
+import Login from '@/views/Login.vue'
 
 export default {
   components: {
     appHeader: Header,
-    appFooter: Footer
+    appFooter: Footer,
+    appLogin: Login
   }
 }
 </script>
