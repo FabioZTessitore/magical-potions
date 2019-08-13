@@ -49,13 +49,16 @@ export default {
             'signup'
         ]),
         onSignupSubmit () {
-            this.$store.dispatch('signup', this.form)
+            this.socket.emit('signup', this.form)
+
         }
     },
     created () {
+        this.socket.off('signupResponse')
         this.socket.on('signupResponse', function (data) {
-            console.log(data)
             // in caso di errore mostralo
+            if (data.success === false) return console.log(data.message)
+
             // se tutto ok vai alla home page utente (che carichera' i dati iniziali?)
             // forse se tutto ok in questo messaggio dovrebbero essere presenti tutti i dati
             // (inutile fare una nuova connessione!)
