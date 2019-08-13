@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     data () {
@@ -34,12 +34,17 @@ export default {
         ])
     },
     methods: {
+        ...mapActions([
+            'setUserData'
+        ]),
         onLoginSubmit () {
             this.socket.emit('authentication', this.form)
 
         }
     },
     created () {
+        const me = this
+
         this.socket.off('loginResponse')
         this.socket.on('loginResponse', function (data) {
             // errors are handled by 'unauthorized'
@@ -48,6 +53,10 @@ export default {
             // forse se tutto ok in questo messaggio dovrebbero essere presenti tutti i dati
             // (inutile fare una nuova connessione!)
             console.log(data)
+            me.$store.dispatch('setUserData', data)
+
+
+            me.$router.push('userhome')
         })
         
         this.socket.off('unauthorized')
