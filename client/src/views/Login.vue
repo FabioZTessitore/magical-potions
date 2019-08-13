@@ -49,13 +49,7 @@ export default {
         this.socket.on('loginResponse', function (data) {
             // errors are handled by 'unauthorized'
 
-            // se tutto ok vai alla home page utente (che carichera' i dati iniziali?)
-            // forse se tutto ok in questo messaggio dovrebbero essere presenti tutti i dati
-            // (inutile fare una nuova connessione!)
-            console.log(data)
             me.$store.dispatch('setUserData', data)
-
-
             me.$router.push('userhome')
         })
         

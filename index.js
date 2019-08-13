@@ -5,6 +5,7 @@ const io = require('socket.io')(http);
 const mongoose = require('mongoose');
 
 const User = require('./app/models/user');
+const Game = require('./app/models/game');
 
 mongoose.Promise = require('bluebird');
 
@@ -45,16 +46,23 @@ require('socketio-auth')(io, {
 
   postAuthenticate: function (socket, data) {
     const username = data.username;
+    let game = {};
 
+    // eseguire in serie!!!
     User.findOne({ 'username': username }, function (err, user) {
       socket.client.user = user;
+      
+      Game.findOne({ playerId: socket.client.user._id }, function (err, gameData) {
+        game.money = gameData.money;
+        
+        // invia i dati di gioco e dell'utente
+        socket.emit('loginResponse', {
+          message: 'sei dentro',
+          username: username,
+          money: game.money
+        })
+      });
     });
-
-    // invia i dati di gioco e dell'utente
-    socket.emit('loginResponse', {
-      message: 'sei dentro',
-      username: username
-    })
   },
 
   disconnect: function  (socket) {
@@ -95,12 +103,20 @@ io.on('connection', function(socket){
         newUser.username = data.username;
         newUser.password = newUser.generateHash(data.password);
         newUser.createdAt = new Date();
-  
-        newUser.save(function(err) {
+
+        
+        newUser.save(function(err, user) {
           if (err) throw err;
+
+          const newGame = new Game();
+          newGame.playerId = user._id;
+          newGame.save( function (err) {
+
+          });
         });
   
         // inviare anche i dati iniziali (utente e gioco)
+        // al momento del salvataggio nel db
         socket.emit('signupResponse', {
           success: true
         });
